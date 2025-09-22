@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Path
 from sqlalchemy.orm import Session
 from app import schemas, database, dependencies, services
 from typing import List
@@ -42,3 +42,14 @@ def delete_question(
     if not services.delete_question(db, question_id=question_id):
         raise HTTPException(status_code=404, detail="Question not found")
     return None
+
+# Добавление ответа на вопрос
+@router.post("/{question_id}/answers", response_model=schemas.Answer, status_code=status.HTTP_201_CREATED)
+def create_answer(
+    question_id: int = Path(..., gt=0),
+    answer: schemas.AnswerCreate = ...,
+    db: Session = Depends(database.get_db)
+):
+    dependencies.get_question_by_id(question_id, db)
+    
+    return services.create_answer(db=db, answer=answer, question_id=question_id)

@@ -9,7 +9,7 @@ def test_create_question(client):
 
 def test_create_answer(client, test_question):
     response = client.post(
-        f"/answers/questions/{test_question['id']}/answers",
+        f"/questions/{test_question['id']}/answers",
         json={"text": "Test answer", "user_id": "test-user-123"}
     )
     assert response.status_code == 201
@@ -18,7 +18,7 @@ def test_create_answer(client, test_question):
 
 def test_get_question_with_answers(client, test_question):
     answer_response = client.post(
-        f"/answers/questions/{test_question['id']}/answers",
+        f"/questions/{test_question['id']}/answers",
         json={"text": "Test answer", "user_id": "test-user-123"}
     )
     assert answer_response.status_code == 201
@@ -30,7 +30,7 @@ def test_get_question_with_answers(client, test_question):
 
 def test_delete_question_cascades(client, test_question):
     answer_response = client.post(
-        f"/answers/questions/{test_question['id']}/answers",
+        f"/questions/{test_question['id']}/answers",
         json={"text": "Test answer", "user_id": "test-user-123"}
     )
     assert answer_response.status_code == 201
@@ -49,7 +49,7 @@ def test_get_nonexistent_question(client):
 
 def test_create_answer_nonexistent_question(client):
     response = client.post(
-        "/answers/questions/999/answers",
+        "/questions/999/answers",
         json={"text": "Test answer", "user_id": "test-user-123"}
     )
     assert response.status_code == 404
@@ -75,7 +75,7 @@ def test_validation_empty_text(client):
     question_id = question_response.json()["id"]
 
     response = client.post(
-        f"/answers/questions/{question_id}/answers",
+        f"/questions/{question_id}/answers",
         json={"text": "", "user_id": "test-user"}
     )
     assert response.status_code == 422
