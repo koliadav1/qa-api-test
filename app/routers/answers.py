@@ -6,7 +6,7 @@ from app.models import Answer
 router = APIRouter()
 
 # Добавление ответа на вопрос
-@router.post("/questions/{question_id}", response_model=schemas.Answer, status_code=status.HTTP_201_CREATED)
+@router.post("/questions/{question_id}/answers", response_model=schemas.Answer, status_code=status.HTTP_201_CREATED)
 def create_answer(
     question_id: int = Path(..., gt=0),
     answer: schemas.AnswerCreate = ...,
